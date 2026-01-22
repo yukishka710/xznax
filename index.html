@@ -1,12 +1,17 @@
-﻿<!DOCTYPE html>
-<html>
+<!DOCTYPE html>
+<html lang="ru">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Финансовый Трекер</title>
+    
     <meta name="theme-color" content="#dc2626" media="(prefers-color-scheme: light)">
     <meta name="theme-color" content="#1a1a1a" media="(prefers-color-scheme: dark)">
     <link rel="manifest" href="manifest.json">
-    <link rel="icon" href="icons/icon-192x192.png">
+    
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -38,6 +43,7 @@
             <div class="expenses-section">
                 <h2>Траты <span id="currentPeriod">(Сегодня)</span></h2>
                 <div id="expensesList" class="expenses-list">
+                    <!-- Список расходов -->
                 </div>
             </div>
 
@@ -81,23 +87,24 @@
         <div class="modal-content">
             <h2>Новый расход</h2>
             <input type="text" id="expenseName" placeholder="Название" class="modal-input">
-
+            
             <select id="expenseCategory" class="modal-select">
                 <option value="">Выберите категорию</option>
+                <!-- Категории будут подгружаться -->
             </select>
-
+            
             <div class="input-with-icon">
                 <input type="number" id="expenseAmount" placeholder="Сумма" class="modal-input">
                 <span class="currency">₽</span>
             </div>
-
+            
             <select id="expensePeriod" class="modal-select">
                 <option value="daily">Ежедневный</option>
                 <option value="weekly">Еженедельный</option>
                 <option value="monthly">Ежемесячный</option>
                 <option value="periodic">Периодический</option>
             </select>
-
+            
             <div class="modal-actions">
                 <button id="cancelExpense" class="btn-secondary">Отмена</button>
                 <button id="saveExpense" class="btn-primary">Сохранить</button>
@@ -106,12 +113,5 @@
     </div>
 
     <script src="app.js"></script>
-    <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('service-worker.js');
-            });
-        }
-    </script>
 </body>
 </html>
