@@ -404,6 +404,7 @@
     }
 }
 
-const tracker = new FinanceTracker();
-
-window.tracker = tracker;
+document.addEventListener('DOMContentLoaded', function() {
+    window.tracker = new FinanceTracker();
+    console.log("Финансовый трекер загружен!");
+});
