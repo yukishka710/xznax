@@ -1,4 +1,4 @@
-﻿class FinanceTracker {
+class FinanceTracker {
     constructor() {
         this.data = {
             categories: [],
@@ -11,17 +11,18 @@
 
         this.currentPeriod = 'daily';
         this.selectedCategoryColor = '#dc2626';
-
-        this.init();
+        
     }
 
     init() {
+        console.log("Инициализация приложения...");
         this.loadData();
         this.setupEventListeners();
         this.renderCategories();
         this.renderExpenses();
         this.updateStats();
         this.applyTheme();
+        console.log("Приложение инициализировано!");
     }
 
     loadData() {
@@ -37,74 +38,111 @@
                 { id: '5', name: 'Другое', color: '#0891b2' }
             ];
         }
+        console.log("Данные загружены:", this.data);
     }
 
     saveData() {
         localStorage.setItem('financeData', JSON.stringify(this.data));
+        console.log("Данные сохранены");
     }
 
     setupEventListeners() {
-        document.querySelectorAll('.period-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                this.currentPeriod = e.target.dataset.period;
-                document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
-                e.target.classList.add('active');
-                this.renderExpenses();
-                this.updatePeriodLabel();
+        console.log("Настройка обработчиков событий...");
+        
+        const periodButtons = document.querySelectorAll('.period-btn');
+        if (periodButtons.length > 0) {
+            periodButtons.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    this.currentPeriod = e.target.dataset.period;
+                    document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+                    e.target.classList.add('active');
+                    this.renderExpenses();
+                    this.updatePeriodLabel();
+                });
             });
-        });
+        }
 
-        document.getElementById('themeToggle').addEventListener('click', () => {
-            const themes = ['auto', 'light', 'dark'];
-            const currentIndex = themes.indexOf(this.data.settings.theme);
-            this.data.settings.theme = themes[(currentIndex + 1) % themes.length];
-            this.applyTheme();
-            this.saveData();
-        });
-
-        document.getElementById('addCategory').addEventListener('click', () => {
-            this.showCategoryModal();
-        });
-
-        document.getElementById('addItem').addEventListener('click', () => {
-            this.showExpenseModal();
-        });
-
-        document.getElementById('cancelCategory').addEventListener('click', () => {
-            this.hideCategoryModal();
-        });
-
-        document.getElementById('saveCategory').addEventListener('click', () => {
-            this.saveNewCategory();
-        });
-
-        document.querySelectorAll('.color-option').forEach(option => {
-            option.addEventListener('click', (e) => {
-                document.querySelectorAll('.color-option').forEach(o => o.classList.remove('active'));
-                e.target.classList.add('active');
-                this.selectedCategoryColor = e.target.dataset.color;
+        const themeToggle = document.getElementById('themeToggle');
+        if (themeToggle) {
+            themeToggle.addEventListener('click', () => {
+                const themes = ['auto', 'light', 'dark'];
+                const currentIndex = themes.indexOf(this.data.settings.theme);
+                this.data.settings.theme = themes[(currentIndex + 1) % themes.length];
+                this.applyTheme();
+                this.saveData();
             });
-        });
+        }
 
-        document.getElementById('cancelExpense').addEventListener('click', () => {
-            this.hideExpenseModal();
-        });
+        const addCategoryBtn = document.getElementById('addCategory');
+        if (addCategoryBtn) {
+            addCategoryBtn.addEventListener('click', () => {
+                this.showCategoryModal();
+            });
+        }
 
-        document.getElementById('saveExpense').addEventListener('click', () => {
-            this.saveNewExpense();
-        });
+        const addItemBtn = document.getElementById('addItem');
+        if (addItemBtn) {
+            addItemBtn.addEventListener('click', () => {
+                this.showExpenseModal();
+            });
+        }
 
-        document.getElementById('budgetInput').addEventListener('change', (e) => {
-            this.data.budget = parseFloat(e.target.value) || 0;
-            this.saveData();
-            this.updateStats();
-        });
+        const cancelCategoryBtn = document.getElementById('cancelCategory');
+        if (cancelCategoryBtn) {
+            cancelCategoryBtn.addEventListener('click', () => {
+                this.hideCategoryModal();
+            });
+        }
 
-        document.getElementById('budgetInput').value = this.data.budget;
+        const saveCategoryBtn = document.getElementById('saveCategory');
+        if (saveCategoryBtn) {
+            saveCategoryBtn.addEventListener('click', () => {
+                this.saveNewCategory();
+            });
+        }
+
+        const colorOptions = document.querySelectorAll('.color-option');
+        if (colorOptions.length > 0) {
+            colorOptions.forEach(option => {
+                option.addEventListener('click', (e) => {
+                    document.querySelectorAll('.color-option').forEach(o => o.classList.remove('active'));
+                    e.target.classList.add('active');
+                    this.selectedCategoryColor = e.target.dataset.color;
+                });
+            });
+        }
+
+        const cancelExpenseBtn = document.getElementById('cancelExpense');
+        if (cancelExpenseBtn) {
+            cancelExpenseBtn.addEventListener('click', () => {
+                this.hideExpenseModal();
+            });
+        }
+
+        const saveExpenseBtn = document.getElementById('saveExpense');
+        if (saveExpenseBtn) {
+            saveExpenseBtn.addEventListener('click', () => {
+                this.saveNewExpense();
+            });
+        }
+
+        const budgetInput = document.getElementById('budgetInput');
+        if (budgetInput) {
+            budgetInput.value = this.data.budget;
+            budgetInput.addEventListener('change', (e) => {
+                this.data.budget = parseFloat(e.target.value) || 0;
+                this.saveData();
+                this.updateStats();
+            });
+        }
+
+        console.log("Обработчики событий настроены");
     }
 
     applyTheme() {
         const themeBtn = document.getElementById('themeToggle');
+        if (!themeBtn) return;
+
         let effectiveTheme = this.data.settings.theme;
 
         if (effectiveTheme === 'auto') {
@@ -117,20 +155,31 @@
         }
 
         document.documentElement.setAttribute('data-theme', effectiveTheme);
+        console.log("Тема применена:", effectiveTheme);
     }
 
     showCategoryModal() {
-        document.getElementById('categoryModal').classList.add('active');
-        document.getElementById('categoryName').value = '';
-        document.querySelector('.color-option[data-color="#dc2626"]').click();
+        const modal = document.getElementById('categoryModal');
+        const categoryNameInput = document.getElementById('categoryName');
+        const colorOption = document.querySelector('.color-option[data-color="#dc2626"]');
+        
+        if (modal && categoryNameInput) {
+            modal.classList.add('active');
+            categoryNameInput.value = '';
+            if (colorOption) colorOption.click();
+        }
     }
 
     hideCategoryModal() {
-        document.getElementById('categoryModal').classList.remove('active');
+        const modal = document.getElementById('categoryModal');
+        if (modal) modal.classList.remove('active');
     }
 
     saveNewCategory() {
-        const name = document.getElementById('categoryName').value.trim();
+        const nameInput = document.getElementById('categoryName');
+        if (!nameInput) return;
+
+        const name = nameInput.value.trim();
         if (!name) {
             alert('Введите название категории');
             return;
@@ -150,6 +199,10 @@
 
     showExpenseModal() {
         const categorySelect = document.getElementById('expenseCategory');
+        const modal = document.getElementById('expenseModal');
+        
+        if (!categorySelect || !modal) return;
+
         categorySelect.innerHTML = '<option value="">Выберите категорию</option>';
 
         this.data.categories.forEach(category => {
@@ -159,25 +212,38 @@
             categorySelect.appendChild(option);
         });
 
-        document.getElementById('expenseModal').classList.add('active');
-        document.getElementById('expenseName').value = '';
-        document.getElementById('expenseAmount').value = '';
+        modal.classList.add('active');
+        
+        const expenseNameInput = document.getElementById('expenseName');
+        const expenseAmountInput = document.getElementById('expenseAmount');
+        
+        if (expenseNameInput) expenseNameInput.value = '';
+        if (expenseAmountInput) expenseAmountInput.value = '';
     }
 
     hideExpenseModal() {
-        document.getElementById('expenseModal').classList.remove('active');
+        const modal = document.getElementById('expenseModal');
+        if (modal) modal.classList.remove('active');
     }
 
     saveNewExpense() {
-        const name = document.getElementById('expenseName').value.trim();
-        const amount = parseFloat(document.getElementById('expenseAmount').value);
-        const categoryId = document.getElementById('expenseCategory').value;
-        const period = document.getElementById('expensePeriod').value;
+        const nameInput = document.getElementById('expenseName');
+        const amountInput = document.getElementById('expenseAmount');
+        const categorySelect = document.getElementById('expenseCategory');
+        
+        if (!nameInput || !amountInput || !categorySelect) return;
+
+        const name = nameInput.value.trim();
+        const amount = parseFloat(amountInput.value);
+        const categoryId = categorySelect.value;
 
         if (!name || !amount || !categoryId) {
             alert('Заполните все поля');
             return;
         }
+
+        const periodSelect = document.getElementById('expensePeriod');
+        const period = periodSelect ? periodSelect.value : 'daily';
 
         const newExpense = {
             id: Date.now().toString(),
@@ -198,6 +264,11 @@
 
     renderCategories() {
         const container = document.getElementById('categoriesList');
+        if (!container) {
+            console.error('Контейнер categoriesList не найден');
+            return;
+        }
+
         container.innerHTML = '';
 
         this.data.categories.forEach(category => {
@@ -211,7 +282,7 @@
                 <div class="category-color" style="background-color: ${category.color}"></div>
                 <span class="category-name">${category.name}</span>
                 <div class="category-actions">
-                    <button class="category-action-btn" onclick="tracker.deleteCategory('${category.id}')">🗑️</button>
+                    <button class="category-action-btn" onclick="window.tracker.deleteCategory('${category.id}')">🗑️</button>
                 </div>
             `;
 
@@ -227,6 +298,11 @@
 
     renderExpenses() {
         const container = document.getElementById('expensesList');
+        if (!container) {
+            console.error('Контейнер expensesList не найден');
+            return;
+        }
+
         container.innerHTML = '';
 
         let filteredExpenses = this.data.expenses.filter(expense => {
@@ -240,7 +316,7 @@
             container.innerHTML = `
                 <div class="empty-state">
                     <p>Нет расходов за этот период</p>
-                    <button onclick="tracker.showExpenseModal()" class="btn-secondary">Добавить первый расход</button>
+                    <button onclick="window.tracker.showExpenseModal()" class="btn-secondary">Добавить первый расход</button>
                 </div>
             `;
             return;
@@ -255,7 +331,7 @@
             expenseElement.innerHTML = `
                 <input type="checkbox" class="expense-checkbox" 
                        ${expense.completed ? 'checked' : ''}
-                       onchange="tracker.toggleExpense('${expense.id}')">
+                       onchange="window.tracker.toggleExpense('${expense.id}')">
                 
                 <div class="expense-info">
                     <span class="expense-name">${expense.name}</span>
@@ -269,8 +345,8 @@
                 </div>
                 
                 <div class="expense-actions">
-                    <button class="expense-action-btn" onclick="tracker.editExpense('${expense.id}')">✏️</button>
-                    <button class="expense-action-btn" onclick="tracker.deleteExpense('${expense.id}')">🗑️</button>
+                    <button class="expense-action-btn" onclick="window.tracker.editExpense('${expense.id}')">✏️</button>
+                    <button class="expense-action-btn" onclick="window.tracker.deleteExpense('${expense.id}')">🗑️</button>
                 </div>
             `;
 
@@ -294,15 +370,22 @@
             this.showExpenseModal();
 
             setTimeout(() => {
-                document.getElementById('expenseName').value = expense.name;
-                document.getElementById('expenseAmount').value = expense.amount;
-                document.getElementById('expenseCategory').value = expense.categoryId;
-                document.getElementById('expensePeriod').value = expense.period;
-
+                const nameInput = document.getElementById('expenseName');
+                const amountInput = document.getElementById('expenseAmount');
+                const categorySelect = document.getElementById('expenseCategory');
+                const periodSelect = document.getElementById('expensePeriod');
                 const saveBtn = document.getElementById('saveExpense');
-                saveBtn.onclick = () => {
-                    this.updateExpense(id);
-                };
+
+                if (nameInput) nameInput.value = expense.name;
+                if (amountInput) amountInput.value = expense.amount;
+                if (categorySelect) categorySelect.value = expense.categoryId;
+                if (periodSelect) periodSelect.value = expense.period;
+
+                if (saveBtn) {
+                    saveBtn.onclick = () => {
+                        this.updateExpense(id);
+                    };
+                }
             }, 100);
         }
     }
@@ -310,10 +393,15 @@
     updateExpense(id) {
         const expense = this.data.expenses.find(e => e.id === id);
         if (expense) {
-            expense.name = document.getElementById('expenseName').value.trim();
-            expense.amount = parseFloat(document.getElementById('expenseAmount').value);
-            expense.categoryId = document.getElementById('expenseCategory').value;
-            expense.period = document.getElementById('expensePeriod').value;
+            const nameInput = document.getElementById('expenseName');
+            const amountInput = document.getElementById('expenseAmount');
+            const categorySelect = document.getElementById('expenseCategory');
+            const periodSelect = document.getElementById('expensePeriod');
+
+            if (nameInput) expense.name = nameInput.value.trim();
+            if (amountInput) expense.amount = parseFloat(amountInput.value);
+            if (categorySelect) expense.categoryId = categorySelect.value;
+            if (periodSelect) expense.period = periodSelect.value;
 
             this.saveData();
             this.renderExpenses();
@@ -348,18 +436,24 @@
     }
 
     updateStats() {
+        const totalElement = document.getElementById('totalAmount');
+        const budgetInput = document.getElementById('budgetInput');
+        const progressBar = document.getElementById('progressBar');
+        const budgetLeft = document.getElementById('budgetLeft');
+
+        if (!totalElement) return;
+
         const total = this.data.expenses
             .filter(expense => !expense.completed && expense.period === this.currentPeriod)
             .reduce((sum, expense) => sum + expense.amount, 0);
 
-        document.getElementById('totalAmount').textContent = total.toLocaleString() + ' ₽';
+        totalElement.textContent = total.toLocaleString() + ' ₽';
 
         const budget = this.data.budget;
-        const budgetElement = document.getElementById('budgetInput');
-        const progressBar = document.getElementById('progressBar');
-        const budgetLeft = document.getElementById('budgetLeft');
 
-        if (budget > 0) {
+        if (budgetInput) budgetInput.value = budget;
+
+        if (budget > 0 && progressBar && budgetLeft) {
             const percentage = Math.min((total / budget) * 100, 100);
             progressBar.style.width = `${percentage}%`;
 
@@ -371,22 +465,23 @@
                 budgetLeft.textContent = `Перерасход: ${Math.abs(remaining).toLocaleString()} ₽`;
                 budgetLeft.style.color = 'var(--primary-color)';
             }
-        } else {
+        } else if (progressBar && budgetLeft) {
             progressBar.style.width = '0%';
             budgetLeft.textContent = 'Установите бюджет';
         }
-
-        budgetElement.value = budget;
     }
 
     updatePeriodLabel() {
+        const element = document.getElementById('currentPeriod');
+        if (!element) return;
+
         const labels = {
             daily: 'Сегодня',
             weekly: 'Эта неделя',
             monthly: 'Этот месяц',
             periodic: 'Все периоды'
         };
-        document.getElementById('currentPeriod').textContent = `(${labels[this.currentPeriod]})`;
+        element.textContent = `(${labels[this.currentPeriod]})`;
     }
 
     getPeriodLabel(period) {
@@ -405,6 +500,7 @@
 }
 
 document.addEventListener('DOMContentLoaded', function() {
+    console.log("DOM загружен, инициализируем приложение...");
     window.tracker = new FinanceTracker();
-    console.log("Финансовый трекер загружен!");
+    window.tracker.init();
 });
