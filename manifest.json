@@ -1,9 +1,9 @@
 {
   "name": "Финансовый Трекер",
   "short_name": "Финансы",
-  "description": "Приложение для учета личных финансов",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0a0a0a",
   "theme_color": "#dc2626",
-  "orientation": "
+  "lang": "ru"
+}
