@@ -1,0 +1,117 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta name="theme-color" content="#dc2626" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#1a1a1a" media="(prefers-color-scheme: dark)">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="icons/icon-192x192.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-left">
+                <h1>💰 Финансы</h1>
+                <div class="period-selector">
+                    <button class="period-btn active" data-period="daily">День</button>
+                    <button class="period-btn" data-period="weekly">Неделя</button>
+                    <button class="period-btn" data-period="monthly">Месяц</button>
+                    <button class="period-btn" data-period="periodic">Период</button>
+                </div>
+            </div>
+            <div class="header-right">
+                <button id="themeToggle" class="theme-btn">🌙</button>
+                <button id="addCategory" class="btn-secondary">+ Категория</button>
+                <button id="addItem" class="btn-primary">+ Добавить</button>
+            </div>
+        </header>
+
+        <main>
+            <div class="categories-section">
+                <h2>Категории</h2>
+                <div id="categoriesList" class="categories-list">
+                </div>
+            </div>
+
+            <div class="expenses-section">
+                <h2>Траты <span id="currentPeriod">(Сегодня)</span></h2>
+                <div id="expensesList" class="expenses-list">
+                </div>
+            </div>
+
+            <div class="stats-section">
+                <div class="stats-card">
+                    <h3>Итого</h3>
+                    <div class="total-amount" id="totalAmount">0 ₽</div>
+                </div>
+                <div class="stats-card">
+                    <h3>Бюджет</h3>
+                    <input type="number" id="budgetInput" placeholder="Установите бюджет" class="budget-input">
+                    <div class="budget-progress">
+                        <div class="progress-bar" id="progressBar"></div>
+                    </div>
+                    <div class="budget-left" id="budgetLeft"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div id="categoryModal" class="modal">
+        <div class="modal-content">
+            <h2>Новая категория</h2>
+            <input type="text" id="categoryName" placeholder="Название категории" class="modal-input">
+            <div class="color-picker">
+                <div class="color-option" data-color="#dc2626"></div>
+                <div class="color-option" data-color="#2563eb"></div>
+                <div class="color-option" data-color="#16a34a"></div>
+                <div class="color-option" data-color="#ea580c"></div>
+                <div class="color-option" data-color="#7c3aed"></div>
+                <div class="color-option" data-color="#0891b2"></div>
+            </div>
+            <div class="modal-actions">
+                <button id="cancelCategory" class="btn-secondary">Отмена</button>
+                <button id="saveCategory" class="btn-primary">Сохранить</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="expenseModal" class="modal">
+        <div class="modal-content">
+            <h2>Новый расход</h2>
+            <input type="text" id="expenseName" placeholder="Название" class="modal-input">
+
+            <select id="expenseCategory" class="modal-select">
+                <option value="">Выберите категорию</option>
+            </select>
+
+            <div class="input-with-icon">
+                <input type="number" id="expenseAmount" placeholder="Сумма" class="modal-input">
+                <span class="currency">₽</span>
+            </div>
+
+            <select id="expensePeriod" class="modal-select">
+                <option value="daily">Ежедневный</option>
+                <option value="weekly">Еженедельный</option>
+                <option value="monthly">Ежемесячный</option>
+                <option value="periodic">Периодический</option>
+            </select>
+
+            <div class="modal-actions">
+                <button id="cancelExpense" class="btn-secondary">Отмена</button>
+                <button id="saveExpense" class="btn-primary">Сохранить</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('service-worker.js');
+            });
+        }
+    </script>
+</body>
+</html>
